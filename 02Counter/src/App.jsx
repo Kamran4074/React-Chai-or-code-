@@ -18,7 +18,7 @@ function App() {
   }
   return (
     <>
-    <h1>Counter pr~oject using Hook</h1>
+    <h1>Counter project using Hook</h1>
     <h2>Your Value:{counter}</h2>
 
     <button onClick={increase}>Increase</button>
