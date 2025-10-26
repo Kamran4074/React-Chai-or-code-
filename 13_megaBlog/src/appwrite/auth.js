@@ -1,4 +1,4 @@
-import conf from "../conf/conf.js";
+import conf from "../conf.js";
 import { Client, Account, ID } from "appwrite";
 
 export class AuthService {
@@ -13,18 +13,15 @@ export class AuthService {
     this.account = new Account(this.client);
   }
 
-  // ✅ Create account and auto-login
-  async createAccount({ email, password, name }) {
+  async createAccount({ email, password }) {
     try {
       const userAccount = await this.account.create(
         ID.unique(),
         email,
-        password,
-        name
+        password
       );
 
       if (userAccount) {
-        // Log the user in immediately after signup
         return this.login({ email, password });
       } else {
         return userAccount;
@@ -35,36 +32,32 @@ export class AuthService {
     }
   }
 
-  // ✅ Create email/password session (login)
   async login({ email, password }) {
     try {
       const session = await this.account.createEmailPasswordSession(
         email,
         password
       );
-      return session; // 👈 return session so caller can verify
+      return session;
     } catch (error) {
       console.error("Login error:", error);
       throw error;
     }
   }
 
-  // ✅ Get the current logged-in user
   async getCurrentUser() {
     try {
-      const user = await this.account.get(); // 👈 get current user
+      const user = await this.account.get();
       return user;
     } catch (error) {
-      // If not logged in, Appwrite throws 401
       console.warn("No active session found:", error);
-      return null; // 👈 important: prevent unhandled rejection
+      return null;
     }
   }
 
-  // ✅ Logout
   async logout() {
     try {
-      await this.account.deleteSession("current"); // 👈 specify "current" session
+      await this.account.deleteSession("current");
     } catch (error) {
       console.error("Logout error:", error);
       throw error;
